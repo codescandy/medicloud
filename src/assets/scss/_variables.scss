@@ -139,7 +139,7 @@ $link-decoration:                         none !default;
 
 $link-hover-decoration:                   underline !default;
 
-$card-border-radius:                12px !default;
+$card-border-radius:                16px !default;
 
 
 // Icon
@@ -159,3 +159,15 @@ $avatar-size-md: 2.5rem !default;
 $avatar-size-lg: 3.5rem !default;
 $avatar-size-xl: 5rem !default;
 $avatar-size-xxl: 7.5rem !default;
+
+
+// letter spacing
+$letter-spacing-sm: -0.04em;
+$letter-spacing-xs: -0.08em;
+$letter-spacing-base: 0em;
+$letter-spacing-md: 0.1em;
+$letter-spacing-lg: 0.15em;
+$letter-spacing-xl: 0.2em;
+$letter-spacing-xxl: 0.25em;
+
+
