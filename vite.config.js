@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path'
+import path from 'path' 
 import glob from 'fast-glob'
 // Grab all HTML files inside src (including subfolders)
 const htmlFiles = glob.sync('./src/**/*.html')
@@ -22,7 +23,7 @@ export default defineConfig({
       }
   },
     build: {
-    outDir: resolve(__dirname, 'dist'), // ✅ output outside src
+    outDir: resolve(__dirname, 'dist'),
     emptyOutDir: true,
     rollupOptions: {
       input: htmlFiles.length
@@ -33,26 +34,38 @@ export default defineConfig({
             ])
           )
         : resolve(__dirname, 'src/index.html'),
-         output: {
-          chunkFileNames: 'assets/js/[name].js',
-          entryFileNames: 'assets/js/[name].js',
 
-          assetFileNames: ({name}) => {
-            if (/\.(gif|jpe?g|png|svg)$/.test(name ?? '')){
-                return 'assets/images/[name][extname]';
-            }
+      output: {
+        chunkFileNames: 'assets/js/[name].js',
+        entryFileNames: 'assets/js/[name].js',
 
-            if (/\.css$/.test(name ?? '')) {
-                return 'assets/css/[name][extname]';
-            }
+        assetFileNames: (assetInfo) => {
+  const file = assetInfo.originalFileName || assetInfo.name || ''
+  const ext = path.extname(file)
 
-            // default value
-            // ref: https://rollupjs.org/guide/en/#outputassetfilenames
-            return 'assets/[name][extname]';
-          },
+  // 👉 Extract path AFTER "assets/images/"
+  let parts = file.split(/assets[\\/]images[\\/]/)
 
+  let cleanPath = parts.length > 1 ? parts[1] : path.basename(file)
 
+  const dir = path.dirname(cleanPath)
+  const name = path.basename(cleanPath)
 
+  // remove "." case
+  const finalDir = dir === '.' ? '' : dir
+
+  if (/\.(gif|jpe?g|png|svg)$/.test(ext)) {
+    return finalDir
+      ? `assets/images/${finalDir}/[name][extname]`
+      : `assets/images/[name][extname]`
+  }
+
+  if (ext === '.css') {
+    return 'assets/css/[name][extname]'
+  }
+
+  return 'assets/[name][extname]'
+}
       },
     },
   },
